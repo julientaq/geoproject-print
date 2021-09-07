@@ -10,41 +10,18 @@
 
 
 /** 1. create custom post type for css files */
+
 /** 2. get the story ID to generate the page with everything */
+
+/** 2b reorder the content from the project page */
+/** 3. generate the page from its parent*/
+
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 
-//  try to avoid the creation of a book
-
-// function pagedjs_bookContent()
-// {
-//     register_post_type(
-//         'pagedjs-book',
-//         array(
-//             'labels' => array(
-//                 'name' => __('Book Content'),
-//                 'singular_name' => __('Book'),
-//                 'add_new' => __('Create a new book'),
-//                 'add_new_item' => __('Create a new book'),
-//                 'edit_item' => __('Edit book'),
-//             ),
-//             'exclude_from_search' => true,
-//             'has_archive' => false,
-//             'menu_position' => 51,
-//             'public' => true,
-//             'supports' => array('title'),
-//             'register_meta_box_cb' => 'css_metabox',
-//             'menu_icon' => 'dashicons-book',
-//         )
-
-//     );
-// }
-
-
-// 
 
 
 
@@ -85,21 +62,21 @@ function css_metabox()
 
 function project_printView()
 {
-    add_meta_box('project_print_view_template', __('Print View'), 'printViewDisplay', 'projects');
+    add_meta_box('project_print_view_template', __('Print Template'), 'printViewDisplay', 'projects');
+    add_meta_box('project_print_view_ListAllData', __('Print Order'), 'listAllData', 'projects');
 }
 
 // show the existing templates in the project page to choose the output in the list
 
-function printViewDisplay($post_id)
+function printViewDisplay()
 {
 
     global $post;
     $chosenTemplate = get_post_meta($post->ID, 'chosenTemplate', true);
 ?>
 
-    <label for="chosenTemplate">name of your template</label>
+    <label for="chosenTemplate"><?php __('choose your template') ?></label>
     <p>choose the print template for your story</p>
-
 
 
     <?php
@@ -108,71 +85,145 @@ function printViewDisplay($post_id)
         'posts_per_page' => 10000000,
     );
     $loop = new WP_Query($args);
-    if ($loop->have_posts()) {
-
-
-
-    ?>
+    if ($loop->have_posts()) { ?>
         <select name="chosenTemplate" id="">
 
-            <?php
-            while ($loop->have_posts()) {
+            <?php while ($loop->have_posts()) {
                 $loop->the_post(); ?>
-
-
-                <option value="<?php the_ID(); ?>" <?php
-                                                    if ($chosenTemplate == $post->ID) {
-                                                        print "selected=\"selected\"";
-                                                    }
-                                                    ?>><?php the_title(); ?></option>
-        <?php
-            }
-        } else {
-            print '<p>' . __('There is no template to use yet') . '</p>';
-        }
-
-        ?>
+                <option value="<?php the_ID(); ?>" <?php if ($chosenTemplate == $post->ID) {
+                                                        print " selected=\"selected\" ";
+                                                    } ?>><?php the_title(); ?></option>
+            <?php }  ?>
         </select>
-
-        <!-- <input type="text" name="chosenTemplate" placeholder="my template name" class="widefat" value="<?php print $chosenTemplate ?>" required> -->
-
-
-
-
-
     <?php
+    } else {
+        print '<p>' . __('There is no template to use yet') . '</p>';
+    } ?>
+
+
+
+<?php
+
+
 
 }
 
-add_action('add_meta_boxes', 'project_printView');
-// update_post_meta($post_id, 'templateName', $_POST['templateName']);
-add_action('save_post', 'update_chosen_template');
 
-
-function update_chosen_template($post_id)
+function listAllData($post)
 {
+
+
+    // $post_id = $post->ID;
+
+
+    // list all the children of the page
+
+    $args = array(
+        'post_type' => array('post', 'geoformat', 'maps', 'capes', 'markers'),
+        'meta_key' => 'gp_project',
+        'meta_value' => $post->ID,
+        'meta_value_type' => 'numeric',
+        'posts_per_page' => -1,
+        'orderby' => 'paged-order',
+        'order' => 'UP'
+    );
+
+    $wp_query = new WP_Query();
+    $wp_query->query($args); ?>
+
+    <!-- <p>id of the post: <?php print $post->ID; ?></p> -->
+    <ul>
+        <?php if ($wp_query->have_posts()) :  while ($wp_query->have_posts()) : $wp_query->the_post();
+                $order = get_post_meta(get_the_ID(), 'paged-order', true);
+        ?>
+                <?php $maxpost = $wp_query->found_posts ?>
+                <li>
+                    <?php
+                    // $postmetas = get_post_meta(get_the_ID());
+
+                    // foreach ($postmetas as $meta_key => $meta_value) {
+                    //     echo $meta_key . ' : ' . $meta_value[0] . '<br/>';
+                    // }
+
+                    // ?>
+                    <p>
+                        <input data-id="<?php printf(get_the_ID()) ?>" name="paged-order<?php printf(get_the_ID()) ?>" type="number" min="1" max="<?php printf($maxpost)?>" <?php if ($order) {print  "value=\"" . $order . "\"";}; ?>>
+                        <span class="title"><strong><?php the_title(); ?></strong><span> <span>(<?php printf(get_post_type(get_the_id())); ?>)</span>
+                    </p>
+                </li>
+        <?php endwhile;
+        endif; ?>
+    </ul>
+<?php
+}
+
+function update_print_stuff($post_id)
+{
+
 
     global $post;
 
-    $is_autosave = wp_is_post_autosave($post_id);
-    $is_revision = wp_is_post_revision($post_id);
-
-
-
-    if ($is_autosave || $is_revision) {
-        return;
-    }
-
-    $post = get_post($post_id);
-    // make sure it’s only appearing on the book layout page
-
     if ($post->post_type == 'projects') {
         // save custom fields data
+
         if (array_key_exists('chosenTemplate', $_POST)) {
             update_post_meta($post_id, 'chosenTemplate', $_POST['chosenTemplate']);
         }
+
+        $args = array(
+            'post_type' => array('post', 'geoformat', 'maps', 'capes', 'markers'),
+            'meta_key' => 'gp_project',
+            'meta_value' => $post->ID
+        );
+
+        $wp_query = new WP_Query();
+        $wp_query->query($args);
+
+        if ($wp_query->have_posts()) {
+            while ($wp_query->have_posts()) {
+                $wp_query->the_post();
+                $id_of_the_post = get_the_ID();
+
+                $input_name  = 'paged-order' . $id_of_the_post;
+                if (array_key_exists($input_name, $_POST)) {
+                    update_post_meta($id_of_the_post, 'paged-order', $_POST[$input_name]);
+                }
+            }
+        }
     }
 }
+
+
+
+
+
+
+
+add_action('add_meta_boxes', 'project_printView');
+
+// update_post_meta($post_id, 'templateName', $_POST['templateName']);
+
+
+// function update_chosen_template($post_id)
+// {
+
+//     global $post;
+
+//     $is_autosave = wp_is_post_autosave($post_id);
+//     $is_revision = wp_is_post_revision($post_id);
+
+//     if ($is_autosave || $is_revision) {
+//         return;
+//     }
+
+//     // make sure it’s only appearing on the book layout page
+//     if ($post->post_type == 'projects') {
+//         // save custom fields data
+//         if (array_key_exists('chosenTemplate', $_POST)) {
+//             update_post_meta($post_id, 'chosenTemplate', $_POST['chosenTemplate']);
+//         }
+//     }
+// }
 
 
 
@@ -184,17 +235,16 @@ function template_metabox_display()
 
     global $post;
     $templateCSS = get_post_meta($post->ID, 'templateCSS', true);
-    ?>
-        <label for="templateCSS">the code</label>
-        <textarea placeholder="my template CSS" name="templateCSS" rows="30" class="widefat"><?php print $templateCSS ?></textarea>
-    <?php
+?>
+    <label for="templateCSS">the code</label>
+    <textarea placeholder="my template CSS" name="templateCSS" rows="30" class="widefat"><?php print $templateCSS ?></textarea>
+<?php
 }
 
 
 
 
 add_action('init', 'pagedjs_css_custom_post_type');
-// add_action('init', 'pagedjs_bookContent');
 
 
 // save the data
@@ -219,9 +269,6 @@ function template_save($post_id)
 
     if ($post->post_type == 'pagedjs-template') {
         // save custom fields data
-        if (array_key_exists('templateName', $_POST)) {
-            update_post_meta($post_id, 'templateName', $_POST['templateName']);
-        }
 
         if (array_key_exists('templateCSS', $_POST)) {
             update_post_meta($post_id, 'templateCSS', $_POST['templateCSS']);
@@ -229,12 +276,20 @@ function template_save($post_id)
     }
 }
 
-add_action('save_post', 'template_save')
+
+
+// save the chosen template for each post
+// add_action('save_post', 'update_chosen_template');
+
+// update the print order on update and chosen templage
+add_action('save_post', 'update_print_stuff');
+
+// save the template itself
+add_action('save_post', 'template_save');
 
 
 
 
 
 
-
-    ?>
+?>
