@@ -14,12 +14,38 @@
 /** 2. get the story ID to generate the page with everything */
 
 /** 2b reorder the content from the project page */
+
+
 /** 3. generate the page from its parent*/
 
 
-if (!defined('ABSPATH')) {
-    exit;
+
+
+
+
+// if (!defined('ABSPATH')) {
+//     exit;
+
+
+
+// }
+
+
+
+
+
+/** 3. generate the page from its parent*/
+
+add_filter( 'template_include', 'pagedjsTemplate' );
+
+function pagedjsTemplate( $template )
+{
+    if( isset( $_GET['paged']) && 'yes' == $_GET['paged'] )
+        $template = plugin_dir_path( __FILE__ ) . 'template.php';
+
+    return $template;
 }
+
 
 
 
@@ -200,33 +226,6 @@ function update_print_stuff($post_id)
 
 
 add_action('add_meta_boxes', 'project_printView');
-
-// update_post_meta($post_id, 'templateName', $_POST['templateName']);
-
-
-// function update_chosen_template($post_id)
-// {
-
-//     global $post;
-
-//     $is_autosave = wp_is_post_autosave($post_id);
-//     $is_revision = wp_is_post_revision($post_id);
-
-//     if ($is_autosave || $is_revision) {
-//         return;
-//     }
-
-//     // make sure it’s only appearing on the book layout page
-//     if ($post->post_type == 'projects') {
-//         // save custom fields data
-//         if (array_key_exists('chosenTemplate', $_POST)) {
-//             update_post_meta($post_id, 'chosenTemplate', $_POST['chosenTemplate']);
-//         }
-//     }
-// }
-
-
-
 add_action('add_meta_boxes', 'css_metabox');
 
 
@@ -290,6 +289,3 @@ add_action('save_post', 'template_save');
 
 
 
-
-
-?>
