@@ -1,6 +1,7 @@
 <?php
 
-/** Plugin Name: geoproject-book-print 
+/** 
+ * Plugin Name: geoprint 
  * Description: print your geoproject using pagedjs
  * Author: julien taquet
  * Text Domain: geoproject-book-print *
