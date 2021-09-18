@@ -141,7 +141,7 @@ function listAllData($post)
 
     <!-- add link to the preview-->
 
-    <a href="<?php printf(get_permalink($post->ID))  ?>/?paged=yes">Prévisualiser et imprimer!</a>)
+    <a href="<?php printf(get_permalink($post->ID))  ?>/?paged=yes">Prévisualiser et imprimer!</a>
 
     <ul>
         <?php if ($wp_query->have_posts()) :  while ($wp_query->have_posts()) : $wp_query->the_post();
