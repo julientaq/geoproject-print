@@ -20,30 +20,9 @@
 
     <!-- meta data for the map -->
 
-    <!-- <p><span class="key">gp_tiles_provider</span> <span class="value"><?php printf(get_post_meta(get_the_ID(), 'gp_tiles_provider', true)); ?></span></p> -->
-    <!-- <p><span class="key">gp_tiles_zoom</span> <span class="value"><?php printf(get_post_meta(get_the_ID(), 'gp_tiles_zoom', true)); ?><</span></p> -->
-
-    <div class="map-container" id="map-<?php print(get_the_ID()) ?>" 
-        data-mapID="<?php print(get_the_ID()) ?>" 
-        data-zoom="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_zoom', true)); ?>"
-        data-tiles="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_provider', true)); ?>">
+    <div class="map-container" id="map-<?php print(get_the_ID()) ?>" data-map="<?php print(get_the_ID()) ?>" data-zoom="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_zoom', true)); ?>" data-tiles="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_provider', true)); ?>">
     </div>
 
-    <script>
-
-// get all the maps
-// var map = L.map('map-<?php print(get_the_ID()) ?>').setView([51.505, -0.09], 13);
-// L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-//     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-//     maxZoom: 18,
-//     id: 'mapbox/streets-v11',
-//     tileSize: 512,
-//     zoomOffset: -1,
-//     accessToken: 'your.mapbox.access.token'
-// }).addTo(map);
-
-
-  </script>
 
 </section>
 
@@ -65,8 +44,6 @@ $argMarkers = array(
     'meta_value_type'   => 'numeric',
     'posts_per_page' => -1
 );
-
-// $map_ID = $post->id;
 
 
 $wp_queryMarkers = new WP_Query();
@@ -93,18 +70,28 @@ if ($wp_queryMarkers->have_posts()) :  while ($wp_queryMarkers->have_posts()) : 
 
 
 
+        //    find the url for the marker icons
+        $marker_icon_base_url = ($gp_icon_type == 'default') ? GP_URL_DEFAULT_MARKERS_ICONS : GP_URL_CUSTOM_MARKERS_ICONS;
+        $marker_icon_url = $marker_icon_base_url . '/' . $gp_icon_filename;
 ?>
-        <section class="marker">
+
+
+
+        <section class="marker" data-map="<?php print($gp_map) ?>" data-lat="<?php print($gp_lat) ?>" data-lng="<?php print($gp_lng) ?>" data-tiles-provider="<?php print($gp_tiles_provider) ?>" data-popup-image="<?php print($gp_popup_image) ?>" data-popup-text="<?php print($gp_popup_text) ?>" data-popup-video="<?php print($gp_popup_video) ?>" data-popup-audio="<?php print($gp_popup_audio) ?>" data-icon="<?php print($marker_icon_url) ?>">
+
+
+
             <!-- title of the marker -->
             <h2><?php the_title(); ?></h2>
 
             <!-- fetch latitude and longitude of the marker -->
             <div class="markerdata">
                 <p class="mapid"> <span class="key">which map: </span> <span class="value"><?php print($gp_map) ?></span></p>
-                <p class="latitude"> <span class="key">latitude</span> <span class="value"><?php print($gp_lat) ?></span></p>
-                <p class="longitude"><span class="key">longitude</span><span class="value"><?php print($gp_lng) ?></span></p>
+                <p class="lat"> <span class="key">latitude</span> <span class="value"><?php print($gp_lat) ?></span></p>
+                <p class="lgn"><span class="key">longitude</span><span class="value"><?php print($gp_lng) ?></span></p>
                 <p class="tiles"><span class="key">tiles</span><span class="value"><?php print($gp_tiles_provider) ?></span></p>
             </div>
+
             <div class="popup">
                 <!-- get the order of the element -->
                 <?php foreach ($gp_popup_content_order as $component) {
@@ -127,16 +114,9 @@ if ($wp_queryMarkers->have_posts()) :  while ($wp_queryMarkers->have_posts()) : 
 
 
 
-            <!--  TO DO: add the icon to the map -->
+            
 
 
-            <?php
-            //    create the marker icon
-            $marker_icon_base_url = ($gp_icon_type == 'default') ?
-                GP_URL_DEFAULT_MARKERS_ICONS : GP_URL_CUSTOM_MARKERS_ICONS;
-
-            $marker_icon_url = $marker_icon_base_url . '/' . $gp_icon_filename;
-            ?>
 
             <img class="icon" alt="Marqueur" src="<?php print($marker_icon_url)  ?>">
 

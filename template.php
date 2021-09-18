@@ -33,7 +33,7 @@
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-  
+
 
   <?php include 'debug.php' ?>
 
@@ -41,6 +41,9 @@
   <!-- pagedjs -->
   <!-- <script src="https://unpkg.com/pagedjs@0.2.0/dist/paged.polyfill.js"></script> -->
   <title><?php the_title() ?></title>
+
+
+ 
 
 </head>
 
@@ -83,19 +86,21 @@
 
       // echo $postType;
       if ($postType === 'geoformat') {
-        // include 'types/print-geoformat.php';
+        include 'types/print-geoformat.php';
       } elseif ($postType === 'maps') {
         include 'types/print-maps.php';
+        // marker are now part of the map
       }
       // include 'types/print-markers.php';
       elseif ($postType  === 'capes') {
+        // include 'types/reusable/showAllMeta.php';
         include 'types/print-capes.php';
       }
 
     endwhile;
   endif; ?>
 
-<?php include 'pagedjs-hooks.php' ?>
+  <?php include 'pagedjs-hooks.php' ?>
 
 </body>
 

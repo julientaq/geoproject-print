@@ -15,25 +15,6 @@
 
 /** 2b reorder the content from the project page */
 
-
-/** 3. generate the page from its parent*/
-
-
-
-
-
-
-// if (!defined('ABSPATH')) {
-//     exit;
-
-
-
-// }
-
-
-
-
-
 /** 3. generate the page from its parent*/
 
 add_filter( 'template_include', 'pagedjsTemplate' );
@@ -112,7 +93,7 @@ function printViewDisplay()
     );
     $loop = new WP_Query($args);
     if ($loop->have_posts()) { ?>
-        <select name="chosenTemplate" id="">
+        <select name="chosenTemplate">
 
             <?php while ($loop->have_posts()) {
                 $loop->the_post(); ?>
@@ -125,7 +106,6 @@ function printViewDisplay()
     } else {
         print '<p>' . __('There is no template to use yet') . '</p>';
     } ?>
-
 
 
 <?php
@@ -158,6 +138,11 @@ function listAllData($post)
     $wp_query->query($args); ?>
 
     <!-- <p>id of the post: <?php print $post->ID; ?></p> -->
+
+    <!-- add link to the preview-->
+
+    <a href="<?php printf(get_permalink($post->ID))  ?>/?paged=yes">Prévisualiser et imprimer!</a>)
+
     <ul>
         <?php if ($wp_query->have_posts()) :  while ($wp_query->have_posts()) : $wp_query->the_post();
                 $order = get_post_meta(get_the_ID(), 'paged-order', true);

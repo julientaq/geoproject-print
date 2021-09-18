@@ -1,13 +1,16 @@
 <style>
-
-  section {
+:root {
+  --color-primary: orange;
+}
+section {
 
     border: 2px solid black;
     margin: 2em auto;
     max-width: 800px;
     padding: 1em;
- 
+
   }
+
   .marker .content::before {
     content: 'contenu du marqueur';
     color: red;
@@ -15,8 +18,14 @@
     font-family: sans-serif;
     text-transform: uppercase;
   }
-  .map {background: yellow; }
-  .marker {background: orange; }
+
+  .map {
+    background: yellow;
+  }
+
+  .marker {
+    background: orange;
+  }
 
   .marker .meta::before {
     content: 'meta données du marqueur';
@@ -44,11 +53,17 @@
     margin-right: 1em;
   }
 
-  .map-container {
+  .map-container,
+  .capes-container {
     height: 20em;
-    width: 100%; 
-    background: purple; 
+    width: 100%;
+    background: purple;
   }
 
-  .leaflet-control-container {display: none;}
+  @media print {
+    .leaflet-control-container {
+      display: none;
+    }
+  
+  }
 </style>
