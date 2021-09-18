@@ -40,7 +40,6 @@
   <div class="capes-container" id="map-<?php print(get_the_ID()) ?>" data-map="<?php print(get_the_ID()) ?>" data-tiles="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_provider', true)); ?>" data-polylines="<?php printf($concat_polylines) ?>">
   </div>
 
-  <p><?php printf($concat_polylines) ?></p>
 
   <div class="content"><?php the_content() ?></div>
 
