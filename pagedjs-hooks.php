@@ -181,79 +181,95 @@
 
     // find all map.
 
+    function doit() {
+
+
+
+        const mapContainers = document.querySelectorAll(".map-container");
+        const markers = document.querySelectorAll('.marker');
+
+
+        mapContainers.forEach((container, index) => {
+            let mapid = container.dataset.mapid;
+            let zoom = container.dataset.zoom;
+            let tiles = container.dataset.tiles;
+
+            let tileset = {};
+
+            Object.values(tilesProviders).forEach(provider => {
+                if (provider.name == tiles) {
+                    tileset = provider;
+                }
+            });
 
 
 
 
-    const mapContainers = document.querySelectorAll(".map-container");
-    const markers = document.querySelectorAll('.marker');
+            const mapLocation = L.map(container.id, {
+                minZoom: 0,
+                maxZoom: 0,
+                zoomControl: false,
+            }).setView([51.505, -0.09], 13);
+
+            // console.log(mapLocation);
 
 
-    mapContainers.forEach((container, index) => {
-        let mapid = container.dataset.mapid;
-        let zoom = container.dataset.zoom;
-        let tiles = container.dataset.tiles;
-
-        let tileset = {};
-
-        Object.values(tilesProviders).forEach(provider => {
-            if (provider.name == tiles) {
-                tileset = provider;
-            }
-        });
+            L.tileLayer(tileset.url, {
+                attribution: tileset.attribution,
+                maxZoom: tileset.maxZoom ? tileset.maxZoom : "",
+            }).addTo(mapLocation);
 
 
+            var markergroup = new L.featureGroup();
+
+            markers.forEach((marker, markindex) => {
+
+                if (marker.dataset.map == container.dataset.map) {
+
+                    // check if custom marker then push the marker to the right map
+
+                    // custom marker
+                    if (marker.dataset.icon && marker.dataset.icon != "") {
 
 
-        const mapLocation = L.map(container.id, {
-            minZoom: 0,
-            maxZoom: 0,
-            zoomControl: false,
-        }).setView([51.505, -0.09], 13);
+                        // create the icon
 
-        // console.log(mapLocation);
-
-
-        L.tileLayer(tileset.url, {
-            attribution: tileset.attribution,
-            maxZoom: tileset.maxZoom ? tileset.maxZoom : "",
-        }).addTo(mapLocation);
+                        var myIcon = L.icon({
+                            iconUrl: marker.dataset.icon,
+                            iconSize: [50, 50]
+                        });
 
 
-        var markergroup = new L.featureGroup();
-
-        markers.forEach((marker, markindex) => {
-
-            if (marker.dataset.map == container.dataset.map) {
-
-                // check if custom marker then push the marker to the right map
-
-                // custom marker
-                if (marker.dataset.icon && marker.dataset.icon != "") {
+                        marker = new L.Marker([marker.dataset.lat, marker.dataset.lng], {
+                            icon: myIcon
+                        })
+                    } else {
 
 
-                    // create the icon
+                        marker = new L.Marker([marker.dataset.lat, marker.dataset.lng])
 
-                    var myIcon = L.icon({
-                        iconUrl: marker.dataset.icon,
-                        iconSize: [50, 50]
-                    });
+                    }
 
 
-                    marker = new L.Marker([marker.dataset.lat, marker.dataset.lng], {
-                        icon: myIcon
-                    })
-                } else {
 
-
-                    marker = new L.Marker([marker.dataset.lat, marker.dataset.lng])
-
+                    marker.addTo(markergroup);
                 }
 
 
 
-                marker.addTo(markergroup);
-            }
+
+
+
+            });
+
+
+            //bounds for the marker
+            markergroup.addTo(mapLocation);
+
+            // --- to resize to show all markers  ---
+            mapLocation.fitBounds(markergroup.getBounds().pad(0.5));
+
+
 
 
 
@@ -263,105 +279,105 @@
         });
 
 
-        //bounds for the marker
-        markergroup.addTo(mapLocation);
-
-        // --- to resize to show all markers  ---
-        mapLocation.fitBounds(markergroup.getBounds().pad(0.5));
 
 
 
 
 
+        // capes 
+        // . . . . . . . . . . . . . //
 
+        const capes = document.querySelectorAll('.capes-container');
 
+        capes.forEach((container) => {
+            let mapid = container.dataset.map;
+            let zoom = container.dataset.zoom;
+            let tiles = container.dataset.tiles;
 
-    });
+            let tileset = {};
 
-
-
-
-
-
-
-    // capes 
-    // . . . . . . . . . . . . . //
-
-    const capes = document.querySelectorAll('.capes-container');
-
-    capes.forEach((container) => {
-        let mapid = container.dataset.map;
-        let zoom = container.dataset.zoom;
-        let tiles = container.dataset.tiles;
-
-        let tileset = {};
-
-        Object.values(tilesProviders).forEach(provider => {
-            if (provider.name == tiles) {
-                tileset = provider;
-            }
-        });
+            Object.values(tilesProviders).forEach(provider => {
+                if (provider.name == tiles) {
+                    tileset = provider;
+                }
+            });
 
 
 
 
 
 
-        const capLocation = L.map(container.id, {
-            minZoom: 2,
-            // maxZoom: 0,
-            // zoomControl: false,
-        }).setView([51.505, -0.09], 13);
+            const capLocation = L.map(container.id, {
+                minZoom: 2,
+                // maxZoom: 0,
+                // zoomControl: false,
+            }).setView([51.505, -0.09], 13);
 
-        L.tileLayer(tileset.url, {
-            attribution: tileset.attribution,
-            maxZoom: tileset.maxZoom ? tileset.maxZoom : "",
-        }).addTo(capLocation);
+            L.tileLayer(tileset.url, {
+                attribution: tileset.attribution,
+                maxZoom: tileset.maxZoom ? tileset.maxZoom : "",
+            }).addTo(capLocation);
 
-        var polylineOption = {
-            color: 'var(--color-primary)'
-        };
-
-
-
-        // remake the data for the capes (:scream:)
-
-        console.log(container.dataset.polylines);
-        let polylinesClean = container.dataset.polylines.replace(/lat\:/g, '"lat": ');
-        polylinesClean = polylinesClean.replace(/lng\:/g, '"lng": ');
-        polylinesClean = `[${polylinesClean}]`
-        console.log(`polylinesClean`, polylinesClean)
+            var polylineOption = {
+                color: 'var(--color-primary)'
+            };
 
 
 
-        let jsonPolylines = JSON.parse(polylinesClean);
+            // remake the data for the capes (:scream:)
+
+            console.log(container.dataset.polylines);
+            let polylinesClean = container.dataset.polylines.replace(/lat\:/g, '"lat": ');
+            polylinesClean = polylinesClean.replace(/lng\:/g, '"lng": ');
+            polylinesClean = `[${polylinesClean}]`
+            console.log(`polylinesClean`, polylinesClean)
+
+
+
+            let jsonPolylines = JSON.parse(polylinesClean);
 
 
 
 
-        let latlng = [];
-        jsonPolylines.forEach(values => {
+            let latlng = [];
+            jsonPolylines.forEach(values => {
 
-            let line = [];
-            values.forEach((pointLatLng) => {
-                let point = [];
-                point.push(pointLatLng.lat);
-                point.push(pointLatLng.lng);
+                let line = [];
+                values.forEach((pointLatLng) => {
+                    let point = [];
+                    point.push(pointLatLng.lat);
+                    point.push(pointLatLng.lng);
 
-                line.push(point);
+                    line.push(point);
+                })
+                latlng.push(line);
             })
-            latlng.push(line);
+
+            console.log(`latlng`, latlng)
+
+
+            var polyline = L.polyline(latlng, polylineOption);
+            polyline.addTo(capLocation);
+            capLocation.fitBounds(polyline.getBounds().pad(0.5));
+
+
+
         })
-
-        console.log(`latlng`, latlng)
-
-
-        var polyline = L.polyline(latlng, polylineOption);
-        polyline.addTo(capLocation);
-        capLocation.fitBounds(polyline.getBounds().pad(0.5));
+    }
+</script>
 
 
+<!-- pagedjs hook! -->
 
+<script>
+    class geoProject extends Paged.Handler {
+        constructor(chunker, polisher, caller) {
+            super(chunker, polisher, caller);
+        }
 
-    })
+        afterRendered(pages) {
+            doit();
+        }
+    }
+    Paged.registerHandlers(geoProject);
 </script>

@@ -36,10 +36,12 @@
 
 
   <?php include 'debug.php' ?>
+  <?php include 'pagedjs-interface.php' ?>
 
 
   <!-- pagedjs -->
-  <!-- <script src="https://unpkg.com/pagedjs@0.2.0/dist/paged.polyfill.js"></script> -->
+  <script src="https://unpkg.com/pagedjs@0.2.0/dist/paged.polyfill.js"></script>
+
   <title><?php the_title() ?></title>
 
 
