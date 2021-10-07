@@ -184,7 +184,7 @@
 
     // find all map.
 
-    function doit() {
+    function makeMaps() {
 
 
 
@@ -206,7 +206,7 @@
             });
 
 
-
+            
 
             const mapLocation = L.map(container.id, {
                 minZoom: 0,
@@ -406,6 +406,16 @@
             }
         </script>
 
+<script>
+function cleanImg(content) {
+                content.querySelectorAll('img').forEach(img =>{
+                    img.removeAttribute("srcset");
+                    //remove lazy loading as it blocks the rendeing of pagedjs
+                    img.removeAttribute("loading");
+                    img.classList = "";
+                })
+            }
+</script>
 <!-- pagedjs hook! -->
 
 <script>
@@ -416,9 +426,10 @@
         beforeParsed(content) {
             iframeToLinks(content);
             metaSlideToGrid(content);
+            cleanImg(content);
         }
         afterRendered(pages) {
-            doit();
+            makeMaps();
             console.log(`done!`);
         }
     }
