@@ -178,4 +178,6 @@
     .pagedjs_bleed-left .pagedjs_marks-crop:last-child,
     .pagedjs_bleed-right .pagedjs_marks-crop:last-child {
         box-shadow: 0px -1px 0px 0px var(--pagedjs-crop-shadow);
+    }
+
 </style>
