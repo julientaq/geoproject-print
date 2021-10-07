@@ -41,6 +41,8 @@
 
   <!-- pagedjs -->
   <script src="https://unpkg.com/pagedjs@0.2.0/dist/paged.polyfill.js"></script>
+  
+  <?php include 'pagedjs-hooks.php' ?>
 
   <title><?php the_title() ?></title>
 
@@ -112,7 +114,6 @@
     endwhile;
   endif; ?>
 
-  <?php include 'pagedjs-hooks.php' ?>
 
 </body>
 
