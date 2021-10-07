@@ -19,7 +19,7 @@
 
 
 
-  <style type="text/css" id="paged-css">
+  <style type="text/css">
     <?php $paged_css = get_post_meta($post->chosenTemplate, templateCSS, true) ?>
   </style>
 
@@ -38,7 +38,7 @@
   <?php 
   //include 'debug.php' 
   ?>
-  
+
   <?php include 'pagedjs-interface.php' ?>
 
 

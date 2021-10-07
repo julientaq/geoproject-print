@@ -21,7 +21,7 @@
 
 <!-- meta data for the map -->
 
-<div class="map-container" id="map-<?php print(get_the_ID()) ?>" data-map="<?php print(get_the_ID()) ?>" data-zoom="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_zoom', true)); ?>" data-tiles="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_provider', true)); ?>">
+<div class="map-container" id="map-<?php print(get_the_ID()); ?>" data-map="<?php print(get_the_ID()) ?>" data-zoom="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_zoom', true)); ?>" data-tiles="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_provider', true)); ?>">
 </div>
 
 
