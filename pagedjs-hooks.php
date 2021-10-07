@@ -419,6 +419,7 @@
         }
         afterRendered(pages) {
             doit();
+            console.log(`done!`);
         }
     }
     Paged.registerHandlers(geoProject);
