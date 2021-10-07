@@ -1,26 +1,26 @@
 <?php
 // $gp_options = get_option( 'gp_options' );
 $section_1 = get_post_meta(get_the_ID(), '_wp_editor_section_1', true);
-$section_2 = get_post_meta( get_the_ID(), '_wp_editor_section_2', true ); 
-$section_3 = get_post_meta( get_the_ID(), '_wp_editor_section_3', true ); 
-$section_4 = get_post_meta( get_the_ID(), '_wp_editor_section_4', true ); 
-$section_5 = get_post_meta( get_the_ID(), '_wp_editor_section_5', true ); 
-$section_6 = get_post_meta( get_the_ID(), '_wp_editor_section_6', true ); 
-$section_7 = get_post_meta( get_the_ID(), '_wp_editor_section_7', true ); 
+$section_2 = get_post_meta(get_the_ID(), '_wp_editor_section_2', true);
+$section_3 = get_post_meta(get_the_ID(), '_wp_editor_section_3', true);
+$section_4 = get_post_meta(get_the_ID(), '_wp_editor_section_4', true);
+$section_5 = get_post_meta(get_the_ID(), '_wp_editor_section_5', true);
+$section_6 = get_post_meta(get_the_ID(), '_wp_editor_section_6', true);
+$section_7 = get_post_meta(get_the_ID(), '_wp_editor_section_7', true);
 $section_img_1 = get_post_meta(get_the_ID(), 'meta-image_1', true);
-$section_img_2 = get_post_meta( get_the_ID(), 'meta-image_2', true ); 
-$section_img_3 = get_post_meta( get_the_ID(), 'meta-image_3', true ); 
-$section_img_4 = get_post_meta( get_the_ID(), 'meta-image_4', true ); 
-$section_img_5 = get_post_meta( get_the_ID(), 'meta-image_5', true ); 
-$section_img_6 = get_post_meta( get_the_ID(), 'meta-image_6', true ); 
-$section_img_7 = get_post_meta( get_the_ID(), 'meta-image_7', true ); 
+$section_img_2 = get_post_meta(get_the_ID(), 'meta-image_2', true);
+$section_img_3 = get_post_meta(get_the_ID(), 'meta-image_3', true);
+$section_img_4 = get_post_meta(get_the_ID(), 'meta-image_4', true);
+$section_img_5 = get_post_meta(get_the_ID(), 'meta-image_5', true);
+$section_img_6 = get_post_meta(get_the_ID(), 'meta-image_6', true);
+$section_img_7 = get_post_meta(get_the_ID(), 'meta-image_7', true);
 $section_caption_1 = get_post_meta(get_the_ID(), 'section1_caption', true);
-$section_caption_2 = get_post_meta( get_the_ID(), 'section2_caption', true ); 
-$section_caption_3 = get_post_meta( get_the_ID(), 'section3_caption', true ); 
-$section_caption_4 = get_post_meta( get_the_ID(), 'section4_caption', true ); 
-$section_caption_5 = get_post_meta( get_the_ID(), 'section5_caption', true ); 
-$section_caption_6 = get_post_meta( get_the_ID(), 'section6_caption', true ); 
-$section_caption_7 = get_post_meta( get_the_ID(), 'section7_caption', true ); 
+$section_caption_2 = get_post_meta(get_the_ID(), 'section2_caption', true);
+$section_caption_3 = get_post_meta(get_the_ID(), 'section3_caption', true);
+$section_caption_4 = get_post_meta(get_the_ID(), 'section4_caption', true);
+$section_caption_5 = get_post_meta(get_the_ID(), 'section5_caption', true);
+$section_caption_6 = get_post_meta(get_the_ID(), 'section6_caption', true);
+$section_caption_7 = get_post_meta(get_the_ID(), 'section7_caption', true);
 $meta_video = get_post_meta(get_the_ID(), 'meta-video', true);
 $section_video_1 = get_post_meta(get_the_ID(), 'meta-video_1', true);
 $section_video_2 = get_post_meta(get_the_ID(), 'meta-video_2', true);
@@ -86,14 +86,20 @@ $txtFacultatif = get_post_meta(get_the_ID(), '_wp_editor_text', true);
 
 
 
-<section class="geoproject intro">
+<section class="geoformat intro">
 
-	<p style="font-family: sans-serif; font-size: 3em;">start geoproject</p>
+	
 
-	<?php if ($meta_auteur) {
-		printf('<p class="auteur"><span class="meta">auteur</span>' . $meta_auteur . '</h1>');
-	} ?>
+	<header>
+		<figure class="img-cover">
 
+			<?php include('reusable/getThumbnail.php') ?>
+		</figure>
+
+		<?php if ($meta_auteur) {
+			printf('<p class="auteur"><span class="meta">auteur</span> ' . $meta_auteur . '</h1>');
+		} ?>
+	</header>
 	<h1 class="titre"><span class="meta">title</span><?php the_title() ?></h1>
 	<?php if ($subline) {
 		printf('<p class="subline"><span class="meta">subline</span>' . $subline . '</h1>');
@@ -104,43 +110,43 @@ $txtFacultatif = get_post_meta(get_the_ID(), '_wp_editor_text', true);
 	<?php if ($chapo) {
 		printf('<p class="chapo"><span class="meta">chapo</span>' . $chapo . '</h1>');
 	} ?>
-	$<?php if ($txtFacultatif) {
+	<?php if ($txtFacultatif) {
 		printf('<p class="txt"><span class="meta">txt faculatif</span>' . $txtFacultatif . '</h1>');
 	} ?>
-
 
 
 
 </section>
 
 <?php
-for ($i = 1; $i <= 7; $i++) { ?>
+for ($i = 1; $i <= 7; $i++) {
+
+	if (${"section_title_" . $i} != "" && ${"section_" . $i} != "") { ?>
+		<section class="geoformat section" id="geoformat_section_<?php echo ($i); ?>">
+			<header>
+				<?php if (${"section_title_" . $i}) {
+					printf('<h2>' . ${"section_title_" . $i} . '</h2>');
+				} ?>
+				<?php if (${"section_img_" . $i}) {
+					printf('<figure><img  src="' . ${"section_img_" . $i} . '"></img>');
+					if (${"section_caption_" . $i}) {
+						printf('<figcaption>' . ${"section_caption_" . $i} . '</figcaption></figure>');
+					}
+				} ?>
 
 
-	<section class="geoproject section_<?php $i ;?>'">
-
-		<?php if (${"section_title_" . $i}) {
-			printf('<h2><span class="meta">section_title_' . $i . '</span> ' . ${"section_title_" . $i} . '</h2>');
-		} ?>
-		<div class="intro">
-			<?php if (${"section_img_" . $i}) {
-				printf('<img src="' . ${"section_img_" . $i} . '"></img> <p><span class="meta">section_img'.$i.'</span> ' . ${"section_img_" . $i} . ' </p>');
-			} ?>
-			<?php if (${"section_caption_" . $i}) {
-				printf('<p><span class="meta">section_caption</span>' . ${"section_caption_" . $i} . '<p>');
-			} ?>
-			<?php if ($meta_video) {
-				printf($meta_video);
-			} ?>
-
+				<?php if ($meta_video) {
+					printf($meta_video);
+				} ?>
+			</header>
 
 			<article>
-
 				<?php if (${"section_" . $i}) {
-					printf('<span class="meta">section_'.$i.'</span>' . ${"section_" . $i});
-				} ?>
+						echo apply_filters('the_content', ${"section_" . $i}); 
+				}	?>
 			</article>
 
-	</section>
-
-	<?php } ?>
+		</section>
+<?php	}
+}
+?>

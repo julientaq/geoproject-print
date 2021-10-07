@@ -9,22 +9,22 @@
 // 1. create the map to put the marker on
 
 ?>
-<section class="map">
 
-    <header>
-        <h1> <?php the_title(); ?></h1>
+<header>
+    <?php 'reusable/getThumbnail.php' ?>
 
-    </header>
+    <h2> <?php the_title(); ?></h2>
 
-    <div class="content"><?php the_content(); ?></div>
+</header>
 
-    <!-- meta data for the map -->
+<div class="content"><?php the_content(); ?></div>
 
-    <div class="map-container" id="map-<?php print(get_the_ID()) ?>" data-map="<?php print(get_the_ID()) ?>" data-zoom="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_zoom', true)); ?>" data-tiles="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_provider', true)); ?>">
-    </div>
+<!-- meta data for the map -->
+
+<div class="map-container" id="map-<?php print(get_the_ID()) ?>" data-map="<?php print(get_the_ID()) ?>" data-zoom="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_zoom', true)); ?>" data-tiles="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_provider', true)); ?>">
+</div>
 
 
-</section>
 
 
 <?php
@@ -59,7 +59,7 @@ if ($wp_queryMarkers->have_posts()) :  while ($wp_queryMarkers->have_posts()) : 
         $gp_tiles_provider =  get_post_meta(get_the_ID(), 'gp_tiles_provider', true);
         $gp_icon_type =  get_post_meta(get_the_ID(), 'gp_icon_type', true);
         $gp_icon_filename =  get_post_meta(get_the_ID(), 'gp_icon_filename', true);
-
+        $display_image_une = get_post_meta(get_the_ID(), 'display_image_une', true);
 
         // popup stuff
         $gp_popup_content_order = explode(',', get_post_meta(get_the_ID(), 'gp_popup_content_order', true));
@@ -80,9 +80,12 @@ if ($wp_queryMarkers->have_posts()) :  while ($wp_queryMarkers->have_posts()) : 
         <section class="marker" data-map="<?php print($gp_map) ?>" data-lat="<?php print($gp_lat) ?>" data-lng="<?php print($gp_lng) ?>" data-tiles-provider="<?php print($gp_tiles_provider) ?>" data-popup-image="<?php print($gp_popup_image) ?>" data-popup-text="<?php print($gp_popup_text) ?>" data-popup-video="<?php print($gp_popup_video) ?>" data-popup-audio="<?php print($gp_popup_audio) ?>" data-icon="<?php print($marker_icon_url) ?>">
 
 
+            <header>
+                <?php 'reusable/getThumbnail.php' ?>
+                <!-- title of the marker -->
 
-            <!-- title of the marker -->
-            <h2><?php the_title(); ?></h2>
+                <h2><?php the_title(); ?></h2>
+            </header>
 
             <!-- fetch latitude and longitude of the marker -->
             <div class="markerdata">
@@ -90,9 +93,10 @@ if ($wp_queryMarkers->have_posts()) :  while ($wp_queryMarkers->have_posts()) : 
                 <p class="lat"> <span class="key">latitude</span> <span class="value"><?php print($gp_lat) ?></span></p>
                 <p class="lgn"><span class="key">longitude</span><span class="value"><?php print($gp_lng) ?></span></p>
                 <p class="tiles"><span class="key">tiles</span><span class="value"><?php print($gp_tiles_provider) ?></span></p>
+                <p class="display_image_une"><span class="key">tiles</span><span class="value"><?php print($display_image_une) ?></span></p>
             </div>
 
-            <div class="popup">
+             <div class="popup">
                 <!-- get the order of the element -->
                 <?php foreach ($gp_popup_content_order as $component) {
 
@@ -105,7 +109,7 @@ if ($wp_queryMarkers->have_posts()) :  while ($wp_queryMarkers->have_posts()) : 
                             <caption><?php print(wp_get_attachment_url($showComp, 'large')) ?></caption>
                         </figure>
                     <?php } else { ?>
-                        <p><span class="key"><?php print($component) ?></span> <span class="value"><?php print($showComp) ?></span></p>
+                            <p><span class="key"><?php print($component) ?></span> <span class="value"><?php print($showComp) ?></span></p>
                     <?php } ?>
 
 
@@ -114,15 +118,15 @@ if ($wp_queryMarkers->have_posts()) :  while ($wp_queryMarkers->have_posts()) : 
 
 
 
-            
+
 
 
 
             <img class="icon" alt="Marqueur" src="<?php print($marker_icon_url)  ?>">
 
             <div class="content"><?php the_content() ?></div>
-
         </section>
+
 
 <?php
     endwhile;

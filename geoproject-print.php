@@ -3,7 +3,7 @@
 /** 
  * Plugin Name: geoprint 
  * Description: print your geoproject using pagedjs
- * Author: julien taquet
+ * Author: julien taquet & Agathe Baez
  * Text Domain: geoproject-book-print *
  * Requires at least: 5.6
  * Require PHP: 7.2

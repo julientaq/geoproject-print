@@ -179,6 +179,9 @@
 
 
 
+
+
+
     // find all map.
 
     function doit() {
@@ -231,6 +234,8 @@
                     // custom marker
                     if (marker.dataset.icon && marker.dataset.icon != "") {
 
+
+                        // limit the amount of marker
 
                         // create the icon
 
@@ -367,6 +372,40 @@
 </script>
 
 
+
+<script>
+            function iframeToLinks(content) {
+                content.querySelectorAll('iframe').forEach(frameIn => {
+                    let src = frameIn.src.replace('?feature=oembed', '').replace('embed/', 'watch?v=');
+                    let title = frameIn.title;
+
+                    let frameOut = `<p class="frame"><span class="title">${title}</span> <a href="${src}">${src}</a>`;
+                    frameIn.insertAdjacentHTML('beforebegin', frameOut);
+                    frameIn.remove();
+
+                })
+            }
+        </script>
+        <script>
+
+            function metaSlideToGrid(content) {
+                content.querySelectorAll('.metaslider').forEach(metaslider => {
+                    let wrapper = document.createElement('figure');
+                    wrapper.classList.add("image-grid");
+
+                    metaslider.querySelectorAll('img').forEach(imgIn => {
+                        let imgOut = `<img src="${imgIn.src}" title="${imgIn.title}" />`
+                        wrapper.insertAdjacentHTML('afterbegin', imgOut);
+
+                    })
+
+                    metaslider.insertAdjacentElement('beforebegin', wrapper);
+                    metaslider.remove();
+
+                })
+            }
+        </script>
+
 <!-- pagedjs hook! -->
 
 <script>
@@ -374,7 +413,10 @@
         constructor(chunker, polisher, caller) {
             super(chunker, polisher, caller);
         }
-
+        beforeParsed(content) {
+            iframeToLinks(content);
+            metaSlideToGrid(content);
+        }
         afterRendered(pages) {
             doit();
         }

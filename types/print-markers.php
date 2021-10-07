@@ -1,8 +1,10 @@
 <section class="marker">
 
 <!-- get all the meta  -->
-<h1>print the marker</h1>
+<!-- <h1>print the marker</h1> -->
 <header>
+    <?php include 'reusable/getThumbnail.php' ?>
+
     <h2><?php the_title() ?></h2>
 </header>
 

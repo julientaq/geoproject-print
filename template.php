@@ -40,12 +40,12 @@
 
 
   <!-- pagedjs -->
-  <script src="https://unpkg.com/pagedjs@0.2.0/dist/paged.polyfill.js"></script>
+  <!-- <script src="https://unpkg.com/pagedjs@0.2.0/dist/paged.polyfill.js"></script> -->
 
   <title><?php the_title() ?></title>
 
 
- 
+
 
 </head>
 
@@ -63,7 +63,7 @@
   $project_ID = get_the_ID();
 
   $args = array(
-    'post_type' => array('markers', 'posts', 'projects', 'geoformats', 'maps', 'capes'),
+    'post_type' => array('markers', 'post', 'projects', 'geoformats', 'geoformat', 'maps', 'capes'),
     'meta_key' => 'gp_project',
     'meta_value' => $project_ID,
     'meta_value_type'   => 'numeric',
@@ -82,19 +82,29 @@
   <?php if ($wp_query->have_posts()) :  while ($wp_query->have_posts()) : $wp_query->the_post();
 
       $postType = get_post_type($post);
+      // to find the post type
+      // echo ('<p>' . $postType . '</p>');
 
       // to debug
+
+      // add post et page stuff
+
+      // add shortcode (`[map src="http://localhost:8889/maps/export/12/" width="100%" height="550px"]`)
+      // attention à l’id déjà donnée de la map id.
 
 
       // echo $postType;
       if ($postType === 'geoformat') {
         include 'types/print-geoformat.php';
+      
       } elseif ($postType === 'maps') {
         include 'types/print-maps.php';
-        // marker are now part of the map
-      }
-      // include 'types/print-markers.php';
-      elseif ($postType  === 'capes') {
+        
+      } elseif ($postType  === 'post') {
+        
+        // include 'types/reusable/showAllMeta.php';
+        include 'types/print-posts.php';
+      } elseif ($postType  === 'capes') {
         // include 'types/reusable/showAllMeta.php';
         include 'types/print-capes.php';
       }

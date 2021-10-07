@@ -3,7 +3,7 @@
   --color-primary: orange;
 }
 section {
-
+    break-before: page;
     border: 2px solid black;
     margin: 2em auto;
     max-width: 800px;
@@ -22,6 +22,7 @@ section {
   .map {
     background: yellow;
   }
+
 
   .marker {
     background: orange;
