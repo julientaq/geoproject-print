@@ -79,7 +79,7 @@
 
 
 
-            <section class="marker" data-map="<?php print($gp_map) ?>" data-lat="<?php print($gp_lat) ?>" data-lng="<?php print($gp_lng) ?>" data-tiles-provider="<?php print($gp_tiles_provider) ?>" data-popup-image="<?php print($gp_popup_image) ?>" data-popup-text="<?php print($gp_popup_text) ?>" data-popup-video="<?php print($gp_popup_video) ?>" data-popup-audio="<?php print($gp_popup_audio) ?>" data-icon="<?php print($marker_icon_url) ?>">
+            <section class="marker" data-marker-id="<?php print(get_the_ID()) ?>" data-map="<?php print($gp_map) ?>" data-lat="<?php print($gp_lat) ?>" data-lng="<?php print($gp_lng) ?>" data-tiles-provider="<?php print($gp_tiles_provider) ?>" data-popup-image="<?php print($gp_popup_image) ?>" data-popup-text="<?php print($gp_popup_text) ?>" data-popup-video="<?php print($gp_popup_video) ?>" data-popup-audio="<?php print($gp_popup_audio) ?>" data-icon="<?php print($marker_icon_url) ?>">
 
 
                 <header>
@@ -92,14 +92,21 @@
                 </header>
 
                 <div class="map-marker">
-                    <div class="map-container markeronly" id="map-marker-<?php print($gp_map . '-' . get_the_id()) ?>" data-marker-id="<?php print(get_the_id()) ?>" data-map="<?php print($gp_map) ?>" data-zoom="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_zoom', true)); ?>" data-lat="<?php print($gp_lat) ?>" data-lng="<?php print($gp_lng) ?>" data-tiles="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_provider', true)); ?>">
+                    <div class="map-container markeronly" id="map-marker-<?php print($gp_map . '-' . get_the_id()) ?>" 
+                    data-marker-id="<?php print(get_the_id()) ?>" 
+                    data-map="<?php print($gp_map) ?>" 
+                    data-zoom="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_zoom', true)); ?>" 
+                    data-lat="<?php print($gp_lat) ?>" 
+                    data-lng="<?php print($gp_lng) ?>" 
+                    data-tiles="<?php printf(get_post_meta(get_the_ID(), 'gp_tiles_provider', true)); ?>">
 
 
                         <!-- update to only show one marker -->
                     </div>
 
                     <!-- fetch latitude and longitude of the marker -->
-                    <div class="markerdata">
+                    <div class="marker
+                    data">
                         <p class="mapid"> <span class="key">which map: </span> <span class="value"><?php print($gp_map) ?></span></p>
                         <p class="lat"> <span class="key">latitude</span> <span class="value"><?php print($gp_lat) ?></span></p>
                         <p class="lgn"><span class="key">longitude</span><span class="value"><?php print($gp_lng) ?></span></p>

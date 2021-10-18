@@ -189,10 +189,14 @@
 
 
         const mapContainers = document.querySelectorAll(".map-container");
+
         const markers = document.querySelectorAll('.marker');
 
 
         mapContainers.forEach((container, index) => {
+
+
+            // set container zoom from css?
             let mapid = container.dataset.mapid;
             let zoom = container.dataset.zoom;
             let tiles = container.dataset.tiles;
@@ -206,13 +210,14 @@
             });
 
 
-            
+
 
             const mapLocation = L.map(container.id, {
-                minZoom: 0,
-                maxZoom: 0,
-                zoomControl: false,
-            }).setView([51.505, -0.09], 13);
+                    minZoom: 0,
+                    maxZoom: 20,
+                    zoomControl: false,
+                })
+                .setView([51.505, -0.09], 20);
 
             // console.log(mapLocation);
 
@@ -223,49 +228,76 @@
             }).addTo(mapLocation);
 
 
+
             var markergroup = new L.featureGroup();
 
-            markers.forEach((marker, markindex) => {
+            if (!container.classList.contains('markeronly')) {
 
-                if (marker.dataset.map == container.dataset.map) {
+                markers.forEach((marker, markindex) => {
+                    // console.log(`marker.dataset`, marker.dataset)
+                    if (marker.dataset.map == container.dataset.map) {
 
-                    // check if custom marker then push the marker to the right map
+                        // check if custom marker then push the marker to the right map
 
-                    // custom marker
-                    if (marker.dataset.icon && marker.dataset.icon != "") {
-
-
-                        // limit the amount of marker
-
-                        // create the icon
-
-                        var myIcon = L.icon({
-                            iconUrl: marker.dataset.icon,
-                            iconSize: [50, 50]
-                        });
+                        // custom marker
+                        if (marker.dataset.icon && marker.dataset.icon != "") {
 
 
-                        marker = new L.Marker([marker.dataset.lat, marker.dataset.lng], {
-                            icon: myIcon
-                        })
-                    } else {
+                            // limit the amount of marker
+
+                            // create the icon
+
+                            var myIcon = L.icon({
+                                iconUrl: marker.dataset.icon,
+                                iconSize: [50, 50]
+                            });
 
 
-                        marker = new L.Marker([marker.dataset.lat, marker.dataset.lng])
+                            marker = new L.Marker([marker.dataset.lat, marker.dataset.lng], {
+                                icon: myIcon
+                            })
+                        } else {
+
+
+                            marker = new L.Marker([marker.dataset.lat, marker.dataset.lng])
+
+                        }
+
+
+
+                        marker.addTo(markergroup);
 
                     }
+                })
+            } else if (container.classList.contains('markeronly')) {
+                markers.forEach((marker, markindex) => {
+                    if (marker.dataset.markerId == container.dataset.markerId) {
+
+                        // check if custom marker then push the marker to the right map
+
+                        // custom marker
+                        if (marker.dataset.icon && marker.dataset.icon != "") {
 
 
-
-                    marker.addTo(markergroup);
-                }
-
-
-
+                            var myIcon = L.icon({
+                                iconUrl: marker.dataset.icon,
+                                iconSize: [50, 50]
+                            });
 
 
+                            marker = new L.Marker([marker.dataset.lat, marker.dataset.lng], {
+                                icon: myIcon
+                            })
+                        } else {
 
-            });
+                            marker = new L.Marker([marker.dataset.lat, marker.dataset.lng])
+
+                        }
+
+                        marker.addTo(markergroup);
+                    }
+                })
+            }
 
 
             //bounds for the marker
@@ -273,8 +305,6 @@
 
             // --- to resize to show all markers  ---
             mapLocation.fitBounds(markergroup.getBounds().pad(0.5));
-
-
 
 
 
@@ -374,47 +404,46 @@
 
 
 <script>
-            function iframeToLinks(content) {
-                content.querySelectorAll('iframe').forEach(frameIn => {
-                    let src = frameIn.src.replace('?feature=oembed', '').replace('embed/', 'watch?v=');
-                    let title = frameIn.title;
+    function iframeToLinks(content) {
+        content.querySelectorAll('iframe').forEach(frameIn => {
+            let src = frameIn.src.replace('?feature=oembed', '').replace('embed/', 'watch?v=');
+            let title = frameIn.title;
 
-                    let frameOut = `<p class="frame"><span class="title">${title}</span> <a href="${src}">${src}</a>`;
-                    frameIn.insertAdjacentHTML('beforebegin', frameOut);
-                    frameIn.remove();
+            let frameOut = `<p class="frame"><span class="title">${title}</span> <a href="${src}">${src}</a>`;
+            frameIn.insertAdjacentHTML('beforebegin', frameOut);
+            frameIn.remove();
 
-                })
-            }
-        </script>
-        <script>
+        })
+    }
+</script>
+<script>
+    function metaSlideToGrid(content) {
+        content.querySelectorAll('.metaslider').forEach(metaslider => {
+            let wrapper = document.createElement('figure');
+            wrapper.classList.add("image-grid");
 
-            function metaSlideToGrid(content) {
-                content.querySelectorAll('.metaslider').forEach(metaslider => {
-                    let wrapper = document.createElement('figure');
-                    wrapper.classList.add("image-grid");
+            metaslider.querySelectorAll('img').forEach(imgIn => {
+                let imgOut = `<img src="${imgIn.src}" title="${imgIn.title}" />`
+                wrapper.insertAdjacentHTML('afterbegin', imgOut);
 
-                    metaslider.querySelectorAll('img').forEach(imgIn => {
-                        let imgOut = `<img src="${imgIn.src}" title="${imgIn.title}" />`
-                        wrapper.insertAdjacentHTML('afterbegin', imgOut);
+            })
 
-                    })
+            metaslider.insertAdjacentElement('beforebegin', wrapper);
+            metaslider.remove();
 
-                    metaslider.insertAdjacentElement('beforebegin', wrapper);
-                    metaslider.remove();
-
-                })
-            }
-        </script>
+        })
+    }
+</script>
 
 <script>
-function cleanImg(content) {
-                content.querySelectorAll('img').forEach(img =>{
-                    img.removeAttribute("srcset");
-                    //remove lazy loading as it blocks the rendeing of pagedjs
-                    img.removeAttribute("loading");
-                    img.classList = "";
-                })
-            }
+    function cleanImg(content) {
+        content.querySelectorAll('img').forEach(img => {
+            img.removeAttribute("srcset");
+            //remove lazy loading as it blocks the rendeing of pagedjs
+            img.removeAttribute("loading");
+            img.classList = "";
+        })
+    }
 </script>
 <!-- pagedjs hook! -->
 

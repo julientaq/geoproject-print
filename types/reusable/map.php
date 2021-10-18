@@ -77,7 +77,18 @@ if ($wp_queryMarkers->have_posts()) :  while ($wp_queryMarkers->have_posts()) : 
 
 
 
-        <section class="marker" data-map="<?php print($gp_map) ?>" data-lat="<?php print($gp_lat) ?>" data-lng="<?php print($gp_lng) ?>" data-tiles-provider="<?php print($gp_tiles_provider) ?>" data-popup-image="<?php print($gp_popup_image) ?>" data-popup-text="<?php print($gp_popup_text) ?>" data-popup-video="<?php print($gp_popup_video) ?>" data-popup-audio="<?php print($gp_popup_audio) ?>" data-icon="<?php print($marker_icon_url) ?>">
+        <section class="marker" 
+        data-map="<?php print($gp_map) ?>" 
+        data-lat="<?php print($gp_lat) ?>" 
+        data-lng="<?php print($gp_lng) ?>" 
+        data-tiles-provider="<?php print($gp_tiles_provider) ?>" 
+        data-popup-image="<?php print($gp_popup_image) ?>" 
+        data-popup-text="<?php print($gp_popup_text) ?>" 
+        data-popup-video="<?php print($gp_popup_video) ?>" 
+        data-popup-audio="<?php print($gp_popup_audio) ?>" 
+        data-icon="<?php print($marker_icon_url) ?>"
+        data-markerid="<?php get_the_id() ?>" 
+        >
 
 
             <header>
