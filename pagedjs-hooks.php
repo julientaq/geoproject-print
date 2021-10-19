@@ -181,11 +181,117 @@
 
 
 
+    function filterMap(center) {
+        center = center.replace(`LatLng(`, '')
+        center = center.replace(`)`, '');
+        let value = center.split(',')
+        return value;
+
+
+    }
+
+    // copyToClip
+
+    function copyToClip(text) {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                console.log('Text copied to clipboard');
+            })
+            .catch(err => {
+                console.log('Error in copying text: ', err);
+            });
+    }
 
     // find all map.
 
+
+
+    function move() {
+
+        interact('.drag').draggable({
+            inertia: false,
+            onmove: function(event) {
+                var target = event.target,
+                    // keep the dragged position in the data-x/data-y attributes
+                    x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+                    y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                // translate the element
+                target.style.webkitTransform =
+                    target.style.transform =
+                    'translate(' + x + 'px, ' + y + 'px)';
+
+                // update the position attributes
+                target.setAttribute('data-x', x);
+                target.setAttribute('data-y', y);
+            },
+            onend: function(event) {
+                console.log(event);
+            }
+        }).allowFrom('.move');
+    }
+
+
+
+    function mapDataUI() {
+        let mapDataStyle = `<style>
+        .mapData pre {
+            white-space: pre-wrap;
+             font-size: 0.9em;
+             border: 1px solid black;
+             padding: 1ch;
+        }
+        .mapData button {
+            margin: 1em 0;
+            display: block;
+        }
+        .mapData{
+            padding: 1em 2ch;
+            position: fixed;
+            z-index: 90000;
+            top: 2em;
+            left:2em;
+            width: 200px;
+            background: white;
+            border: 2px solid black;
+            display: none} .mapData.show{display: block;
+            } 
+        .mapData .move {width: 2em;
+            height: 2em;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }  
+        @media print {
+            .mapData.show, .leaflet-control-container {display: none;}
+
+        }
+
+        
+         </style>`
+        document.head.insertAdjacentHTML('beforeend', mapDataStyle);
+
+
+        let mapDataHTML = `
+        <div class="move"> <svg class="svg-icon" viewBox="0 0 20 20"><path d="M17.592,8.936l-6.531-6.534c-0.593-0.631-0.751-0.245-0.751,0.056l0.002,2.999L5.427,9.075H2.491c-0.839,0-0.162,0.901-0.311,0.752l3.683,3.678l-3.081,3.108c-0.17,0.171-0.17,0.449,0,0.62c0.169,0.17,0.448,0.17,0.618,0l3.098-3.093l3.675,3.685c-0.099-0.099,0.773,0.474,0.773-0.296v-2.965l3.601-4.872l2.734-0.005C17.73,9.688,18.326,9.669,17.592,8.936 M3.534,9.904h1.906l4.659,4.66v1.906L3.534,9.904z M10.522,13.717L6.287,9.48l4.325-3.124l3.088,3.124L10.522,13.717z M14.335,8.845l-3.177-3.177V3.762l5.083,5.083H14.335z"></path></svg></div>    
+        <h3>CSS for the map </h3>
+            <pre class="mapDataCss"></pre>
+
+            <button id="copyMapData">Copy to the clipboard</button>
+            <button id="close">close</button>
+        `
+
+        let mapData = document.createElement('div');
+        mapData.classList.add('mapData', 'drag');
+        mapData.innerHTML = mapDataHTML;
+
+
+        document.body.insertAdjacentElement('afterbegin', mapData)
+    }
+
     function makeMaps() {
 
+        mapDataUI();
 
 
         const mapContainers = document.querySelectorAll(".map-container");
@@ -197,8 +303,20 @@
 
 
             // set container zoom from css?
+
+            let mapCSSvalues = getComputedStyle(container);
+
+            let zoom = mapCSSvalues.getPropertyValue('--zoom-level') ? mapCSSvalues.getPropertyValue('--zoom-level') : 10;
+
+            // let zoom = container.dataset.zoom;
+
+
+            let center = mapCSSvalues.getPropertyValue('--map-center') ? filterMap(mapCSSvalues.getPropertyValue('--map-center')) : [43.838071, 4.355146];
+
+            console.log(`zoom`, zoom)
+            console.log(`center`, center)
+
             let mapid = container.dataset.mapid;
-            let zoom = container.dataset.zoom;
             let tiles = container.dataset.tiles;
 
             let tileset = {};
@@ -213,13 +331,9 @@
 
 
             const mapLocation = L.map(container.id, {
-                    minZoom: 0,
-                    maxZoom: 20,
-                    zoomControl: false,
+                    zoomControl: true,
                 })
-                .setView([51.505, -0.09], 20);
-
-            // console.log(mapLocation);
+                .setView(center, zoom);
 
 
             L.tileLayer(tileset.url, {
@@ -227,6 +341,7 @@
                 maxZoom: tileset.maxZoom ? tileset.maxZoom : "",
             }).addTo(mapLocation);
 
+            debugger
 
 
             var markergroup = new L.featureGroup();
@@ -234,7 +349,6 @@
             if (!container.classList.contains('markeronly')) {
 
                 markers.forEach((marker, markindex) => {
-                    // console.log(`marker.dataset`, marker.dataset)
                     if (marker.dataset.map == container.dataset.map) {
 
                         // check if custom marker then push the marker to the right map
@@ -304,11 +418,17 @@
             markergroup.addTo(mapLocation);
 
             // --- to resize to show all markers  ---
-            mapLocation.fitBounds(markergroup.getBounds().pad(0.5));
+            // mapLocation.fitBounds(markergroup.getBounds().pad(0.5));
 
 
-
-
+            let mapDataUI = document.querySelector('.mapData')
+            mapLocation.on('zoomstart zoom zoomend dragend', function(ev) {
+                mapDataUI.classList.add('show');
+                mapDataUI.querySelector('.mapDataCss').innerHTML = `#${mapLocation._container.id}{
+--zoom-level: ${mapLocation.getZoom()}; 
+--map-center: ${mapLocation.getCenter()};
+}`;
+            })
 
 
         });
@@ -325,8 +445,19 @@
         const capes = document.querySelectorAll('.capes-container');
 
         capes.forEach((container) => {
+
+            let mapCSSvalues = getComputedStyle(container);
+
+            let zoom = mapCSSvalues.getPropertyValue('--zoom-level') ? mapCSSvalues.getPropertyValue('--zoom-level') : 6;
+
+            // let zoom = container.dataset.zoom;
+
+
+            let center = mapCSSvalues.getPropertyValue('--map-center') ? filterMap(mapCSSvalues.getPropertyValue('--map-center')) : [43.838071, 4.355146];
+
+
             let mapid = container.dataset.map;
-            let zoom = container.dataset.zoom;
+            // let zoom = container.dataset.zoom;
             let tiles = container.dataset.tiles;
 
             let tileset = {};
@@ -343,10 +474,10 @@
 
 
             const capLocation = L.map(container.id, {
-                minZoom: 2,
-                // maxZoom: 0,
-                // zoomControl: false,
-            }).setView([51.505, -0.09], 13);
+                // minZoom: 0,
+                // maxZoom: 20,
+                zoomControl: true,
+            }).setView(center, zoom);
 
             L.tileLayer(tileset.url, {
                 attribution: tileset.attribution,
@@ -361,11 +492,11 @@
 
             // remake the data for the capes (:scream:)
 
-            console.log(container.dataset.polylines);
+            // console.log(container.dataset.polylines);
             let polylinesClean = container.dataset.polylines.replace(/lat\:/g, '"lat": ');
             polylinesClean = polylinesClean.replace(/lng\:/g, '"lng": ');
             polylinesClean = `[${polylinesClean}]`
-            console.log(`polylinesClean`, polylinesClean)
+            // console.log(`polylinesClean`, polylinesClean)
 
 
 
@@ -388,14 +519,24 @@
                 latlng.push(line);
             })
 
-            console.log(`latlng`, latlng)
 
 
             var polyline = L.polyline(latlng, polylineOption);
             polyline.addTo(capLocation);
-            capLocation.fitBounds(polyline.getBounds().pad(0.5));
+            // capLocation.fitBounds(polyline.getBounds().pad(0.5));
+            // 
 
-
+            let mapDataUI = document.querySelector('.mapData');
+            // capLocation.on('zoomstart zoom zoomend dragend', function(ev) {
+            //     mapDataUI.innerHTML = `#${mapLocation._container.id}{--zoom-level: ${mapLocation.getZoom()}; \n --map-center: ${mapLocation.getCenter()};}`;
+            // });
+            capLocation.on('zoomstart zoom zoomend dragend', function(ev) {
+                mapDataUI.classList.add('show');
+                mapDataUI.querySelector('.mapDataCss').innerHTML = `#${mapLocation._container.id}{
+--zoom-level: ${mapLocation.getZoom()}; 
+--map-center: ${mapLocation.getCenter()};
+}`;
+            })
 
         })
     }
@@ -459,7 +600,12 @@
         }
         afterRendered(pages) {
             makeMaps();
-            console.log(`done!`);
+            move();
+            document.querySelector('#copyMapData').addEventListener('click', function() {
+                let data = this.parentElement.querySelector('.mapDataCss').textContent;
+                // console.log(`data`, data)
+                copyToClip(data)
+            })
         }
     }
     Paged.registerHandlers(geoProject);

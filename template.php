@@ -18,7 +18,14 @@
   <meta charset="utf-8">
 
 
+  <!-- <--minimum style for the map  -->
 
+  <style>
+    .map-container {
+      width: 100%;
+      height: 40em;
+    }
+  </style>
   <style type="text/css">
     <?php $paged_css = get_post_meta($post->chosenTemplate, templateCSS, true) ?>
   </style>
@@ -35,16 +42,22 @@
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 
 
-  <?php 
+  <!-- add interaction for map -->
+
+  <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
+
+
+  <?php
   //include 'debug.php' 
   ?>
 
   <?php include 'pagedjs-interface.php' ?>
 
+  <!-- minium styles for  -->
 
   <!-- pagedjs -->
   <script src="https://unpkg.com/pagedjs@0.2.0/dist/paged.polyfill.js"></script>
-  
+
   <?php include 'pagedjs-hooks.php' ?>
 
   <title><?php the_title() ?></title>
@@ -101,12 +114,10 @@
       // echo $postType;
       if ($postType === 'geoformat') {
         include 'types/print-geoformat.php';
-      
       } elseif ($postType === 'maps') {
         include 'types/print-maps.php';
-        
       } elseif ($postType  === 'post') {
-        
+
         // include 'types/reusable/showAllMeta.php';
         include 'types/print-posts.php';
       } elseif ($postType  === 'capes') {
