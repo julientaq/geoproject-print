@@ -242,7 +242,7 @@
              padding: 1ch;
         }
         .mapData button {
-            margin: 1em 0;
+            margin:1em 0;
             display: block;
         }
         .mapData{
@@ -278,7 +278,7 @@
             <pre class="mapDataCss"></pre>
 
             <button id="copyMapData">Copy to the clipboard</button>
-            <button id="close">close</button>
+            <button class="close">close</button>
         `
 
         let mapData = document.createElement('div');
@@ -341,7 +341,6 @@
                 maxZoom: tileset.maxZoom ? tileset.maxZoom : "",
             }).addTo(mapLocation);
 
-            debugger
 
 
             var markergroup = new L.featureGroup();
@@ -605,6 +604,11 @@
                 let data = this.parentElement.querySelector('.mapDataCss').textContent;
                 // console.log(`data`, data)
                 copyToClip(data)
+            })
+            document.querySelectorAll('.close').forEach(close => {
+                close.addEventListener('click', function() {
+                    this.closest('.show').classList.remove("show");
+                })
             })
         }
     }
