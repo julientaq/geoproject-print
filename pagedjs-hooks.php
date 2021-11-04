@@ -587,6 +587,9 @@
 </script>
 <!-- pagedjs hook! -->
 
+
+
+
 <script>
     class geoProject extends Paged.Handler {
         constructor(chunker, polisher, caller) {
@@ -596,6 +599,8 @@
             iframeToLinks(content);
             metaSlideToGrid(content);
             cleanImg(content);
+            content.querySelector(".project-content p").innerHTML = `<span>${content.querySelector(".project-content p").innerHTML}</span>`
+            
         }
         afterRendered(pages) {
             makeMaps();
