@@ -40,8 +40,7 @@
 </figure>
 
 <div class="project-content">
-<span>
   <?php the_content(); ?>
-</span>
+
 
 </div>
