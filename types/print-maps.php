@@ -83,6 +83,7 @@
 
 
                 <header>
+
                     <?php 'reusable/getThumbnail.php' ?>
                     <!-- title of the marker -->
 
@@ -123,7 +124,8 @@
                             <?php if ($component == "audio") { ?>
                                 <p><span class="key"><?php print($component) ?></span> <span class="value"><?php print(wp_get_attachment_url($showComp)) ?></span></p>
                             <?php } elseif ($component == "image") { ?>
-                                <figure><img src="<?php print(wp_get_attachment_url($showComp, 'large')) ?>" />
+                                <figure>
+                                    <img src="<?php print(wp_get_attachment_url($showComp, 'large')) ?>" />
                                     <figcaption><?php print(wp_get_attachment_url($showComp, 'large')) ?></figcaption>
                                 </figure>
                             <?php } else { ?>
@@ -140,7 +142,7 @@
 
 
 
-                    <img class="icon" alt="Marqueur" src="<?php print($marker_icon_url)  ?>">
+                    <img class="marqueur" alt="Marqueur" src="<?php print($marker_icon_url)  ?>">
 
                     <div class="content"><?php the_content() ?></div>
             </section>

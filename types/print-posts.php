@@ -13,6 +13,7 @@
         <?php the_content() ?>
     </article>
 
+
     <?php include 'reusable/tags.php' ?>
 
 

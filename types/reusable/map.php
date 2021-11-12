@@ -133,7 +133,7 @@ if ($wp_queryMarkers->have_posts()) :  while ($wp_queryMarkers->have_posts()) : 
 
 
 
-            <img class="icon" alt="Marqueur" src="<?php print($marker_icon_url)  ?>">
+            <img class="marqueur" alt="Marqueur" src="<?php print($marker_icon_url) ?>">
 
             <div class="content"><?php the_content() ?></div>
         </section>

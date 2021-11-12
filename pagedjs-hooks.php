@@ -581,7 +581,9 @@
             img.removeAttribute("srcset");
             //remove lazy loading as it blocks the rendeing of pagedjs
             img.removeAttribute("loading");
+            if(!img.classList.contains('popup-icon')){
             img.classList = "";
+            }
         })
     }
 </script>
@@ -600,6 +602,7 @@
             metaSlideToGrid(content);
             cleanImg(content);
             content.querySelector(".project-content p").innerHTML = `<span>${content.querySelector(".project-content p").innerHTML}</span>`
+            content.querySelector(".project-content pre").innerHTML = `<span>${content.querySelector(".project-content pre").innerHTML}</span>`
             
         }
         afterRendered(pages) {
