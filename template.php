@@ -69,8 +69,16 @@
 
 <body>
 
+<section class="site-info">
+<h1><?php printf(get_bloginfo( 'name' )) ?></h1>
+<p class="url"><?php printf(get_bloginfo( 'url' )) ?></p>
+</section>
+
 
   <section class="project">
+
+    <!-- print titre  -->
+
     <!-- print projct first -->
     <?php
     include 'types/print-project.php'

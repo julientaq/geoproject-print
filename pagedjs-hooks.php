@@ -601,9 +601,12 @@
             iframeToLinks(content);
             metaSlideToGrid(content);
             cleanImg(content);
+            if(content.querySelector(".project-content p")) {
             content.querySelector(".project-content p").innerHTML = `<span>${content.querySelector(".project-content p").innerHTML}</span>`
+        }   
+            if(    content.querySelector(".project-content pre")) {
             content.querySelector(".project-content pre").innerHTML = `<span>${content.querySelector(".project-content pre").innerHTML}</span>`
-            
+        }
         }
         afterRendered(pages) {
             makeMaps();
